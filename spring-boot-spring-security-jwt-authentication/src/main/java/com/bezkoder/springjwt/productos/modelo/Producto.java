@@ -1,84 +1,51 @@
 package com.bezkoder.springjwt.productos.modelo;
 
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "productos")
 public class Producto {
-
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private Long id;
-
-   @Column(name = "nombre", length = 60, nullable = false)
-    private String nombre;
-   @Column(name = "descripcion", length = 60, nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+    @Column(name = "title")
+    private String title;
+    @Column(name = "descripcion")
     private String descripcion;
-   @Column(name = "precio", length = 60, nullable = false)
-    private int precio;
-   @Column(name = "idTipo", length = 60, nullable = false)
-    private int idTipo;
-
-    private String imagen;
-
-    public Producto() {
+    @Column(name = "published")
+    private boolean published;
+    public Producto(){
     }
-
-    public Producto(Long id, String nombre, String descripcion, int precio, int id_tipo, String imagen) {
-        super();
-        this.id = id;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.precio = precio;
-        this.idTipo = id_tipo;
-        this.imagen = imagen;
+    public Producto(String title, String description, boolean published) {
+        this.title = title;
+        this.descripcion = description;
+        this.published = published;
     }
-
-    public Long getId() {
+    public long getId() {
         return id;
     }
-
-    public void setId(Long id) {
-        this.id = id;
+    public String getTitle() {
+        return title;
     }
-
-    public String getNombre() {
-        return nombre;
+    public void setTitle(String title) {
+        this.title = title;
     }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
+    public String getDescription() {
         return descripcion;
     }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setDescription(String description) {
+        this.descripcion = description;
+    }
+    public boolean isPublished() {
+        return published;
+    }
+    public void setPublished(boolean isPublished) {
+        this.published = isPublished;
+    }
+    @Override
+    public String toString() {
+        return "Proyecto [id=" + id + ", title=" + title + ", desc=" + descripcion + ", published=" + published + "]";
     }
 
-    public int getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(int precio) {
-        this.precio = precio;
-    }
-
-    public int getIdTipo() {
-        return idTipo;
-    }
-
-    public void setIdTipo(int id_tipo) {
-        this.idTipo = id_tipo;
-    }
-
-    public String getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
-    }
 }
