@@ -1,8 +1,6 @@
 package com.bezkoder.springjwt.controllers;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -12,7 +10,6 @@ import com.bezkoder.springjwt.models.Producto;
 import com.bezkoder.springjwt.models.User;
 import com.bezkoder.springjwt.payload.request.LoginRequest;
 import com.bezkoder.springjwt.repository.ProductoRepositorio;
-import jdk.jshell.spi.ExecutionControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -130,18 +127,47 @@ public class AuthController {
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
 
-  @GetMapping("/inventario")
+  @GetMapping("/inventary")
   public List<Producto> getAllProducto(){
     return productoRepositorio.findAll();
   }
 
-  @GetMapping("/inventario/{id}")
-  public ResponseEntity<Producto> getProductoById(@PathVariable(value = "id") Long employeeId)
+  @GetMapping("/inventary/{id}")
+  public ResponseEntity<Producto> getProductoById(@PathVariable(value = "id") Long productoId)
     throws ResourceNotFoundException{
-    Producto producto = productoRepositorio.findById(Producto)
-            .orElseThrow(() -> ResourceNotFoundException("Product not found for this id :: " + productoId));
+    Producto producto = productoRepositorio.findById(productoId)
+            .orElseThrow(() -> new ResourceNotFoundException("Product not found for this id :: " + productoId));
       return ResponseEntity.ok().body(producto);
   }
 
+  @PostMapping("/inventary")
+  public Producto createProducto(@Valid @RequestBody Producto producto){
+    return productoRepositorio.save(producto);
+  }
 
+  @PutMapping("/inventary/{id}")
+  public ResponseEntity <Producto> updateProducto(@PathVariable(value = "id") Long productoId,
+        @Valid @RequestBody Producto productoDetails) throws ResourceNotFoundException {
+    Producto producto = productoRepositorio.findById(productoId)
+            .orElseThrow(() -> new ResourceNotFoundException("Producto not found for this i :: " + productoId));
+
+    producto.setEquipo(productoDetails.getEquipo());
+    producto.setMarca(productoDetails.getMarca());
+    producto.setModelo(productoDetails.getModelo());
+    producto.setNum_serie(productoDetails.getNum_serie());
+    final Producto updateProducto =productoRepositorio.save(producto);
+    return ResponseEntity.ok(updateProducto);
+  }
+
+  @DeleteMapping("/inventary/{id}")
+  public Map<String, Boolean> deleteProducto(@PathVariable(value = "id") Long productoId)
+    throws ResourceNotFoundException {
+    Producto producto = productoRepositorio.findById(productoId)
+            .orElseThrow(() -> new ResourceNotFoundException("Producto not found for this id :: " + productoId));
+
+    productoRepositorio.delete(producto);
+    Map<String, Boolean> response = new HashMap<>();
+    response.put("Delete", Boolean.TRUE);
+    return response;
+  }
 }
