@@ -127,6 +127,30 @@ public class AuthController {
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
 
+
+  @GetMapping("/list")
+  public List<User> getAllUser(){return userRepository.findAll();}
+
+  @GetMapping("/list/{id}")
+  public ResponseEntity<User> getUserById(@PathVariable(value = "id") Long userId)
+  throws ResourceNotFoundException{
+  User user = userRepository.findById(userId)
+          .orElseThrow(() -> new ResourceNotFoundException("User not found for this id :: " + userId));
+  return ResponseEntity.ok().body(user);
+  }
+
+  @DeleteMapping("/list/{id}")
+  public Map<String, Boolean> deleteUser(@PathVariable(value = "id") Long userId)
+          throws ResourceNotFoundException {
+    User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found for this id :: " + userId));
+
+    userRepository.delete(user);
+    Map<String, Boolean> response = new HashMap<>();
+    response.put("Delete", Boolean.TRUE);
+    return response;
+  }
+
   @GetMapping("/inventary")
   public List<Producto> getAllProducto(){
     return productoRepositorio.findAll();
